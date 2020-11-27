@@ -132,3 +132,4 @@ if errorlevel 1 ( exit /B )
 ### Standard modules
 
 * [Linker](doc/linker.md)
+* [Log](doc/lib/log.md)
