@@ -133,3 +133,4 @@ if errorlevel 1 ( exit /B )
 
 * [Linker](doc/linker.md)
 * [Log](doc/lib/log.md)
+* [Timer](doc/lib/timer.md)
