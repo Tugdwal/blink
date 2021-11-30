@@ -26,7 +26,7 @@ rem Usage: Load [library]...
 :Load
 
 for %%A in (%*) do (
-    call "%~dp0%%A.bat" :Init
+    call "%~dp0%%~A.bat" :Init
     if ERRORLEVEL 1 ( exit /B )
 )
 
