@@ -8,16 +8,8 @@ rem ---------- ---------- ---------- Init ---------- ---------- ----------
 rem Usage: Init
 :Init
 
-if "%LOG%" == "" (
-    set LOG=%~f0
-) else (
-    exit /B 0
-)
-
-rem Functions
-
-set LogInfo=call "%LOG%" :Info
-set LogError=call "%LOG%" :Error
+set LogInfo=call "%~f0" :Info
+set LogError=call "%~f0" :Error
 
 exit /B 0
 

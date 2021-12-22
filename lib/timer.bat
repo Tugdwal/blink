@@ -8,15 +8,9 @@ rem ---------- ---------- ---------- Init ---------- ---------- ----------
 rem Usage: Init
 :Init
 
-if "%LNK%" == "" (
+if "%LnkLoad%" == "" (
     echo:[Error] Use linker.bat to load '%~nx0'
     exit /B 1
-)
-
-if "%TIMER%" == "" (
-    set TIMER=%~f0
-) else (
-    exit /B 0
 )
 
 %LnkLoad% "log"
@@ -24,9 +18,9 @@ if ERRORLEVEL 1 ( exit /B )
 
 rem Functions
 
-set TimerStart=call "%TIMER%" :Start
-set TimerEnd=call "%TIMER%" :End
-set TimerDiff=call "%TIMER%" :Diff
+set TimerStart=call "%~f0" :Start
+set TimerEnd=call "%~f0" :End
+set TimerDiff=call "%~f0" :Diff
 
 exit /B 0
 

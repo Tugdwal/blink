@@ -8,20 +8,7 @@ rem ---------- ---------- ---------- Init ---------- ---------- ----------
 rem Usage: Init
 :Init
 
-if "%LNK%" == "" (
-    echo:[Error] Use linker.bat to load '%~nx0'
-    exit /B 1
-)
-
-if "%FMT%" == "" (
-    set FMT=%~f0
-) else (
-    exit /B 0
-)
-
-rem Functions
-
-set FmtPrint=call "%FMT%" :Print
+set FmtPrint=call "%~f0" :Print
 
 exit /B 0
 

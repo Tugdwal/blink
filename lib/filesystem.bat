@@ -8,41 +8,31 @@ rem ---------- ---------- ---------- Init ---------- ---------- ----------
 rem Usage: Init
 :Init
 
-if "%LNK%" == "" (
+if "%LnkLoad%" == "" (
     echo:[Error] Use linker.bat to load '%~nx0'
     exit /B 1
-)
-
-if "%FS%" == "" (
-    set FS=%~f0
-) else (
-    exit /B 0
 )
 
 %LnkLoad% "log"
 if ERRORLEVEL 1 ( exit /B )
 
-rem Values
-
 set FsModeKeep=keep
 set FsModeOverwrite=overwrite
 
-rem Functions
+set FsIsValidPath=call "%~f0" :IsValidPath
+set FsIsDirectoryPath=call "%~f0" :IsDirectoryPath
+set FsIsFilePath=call "%~f0" :IsFilePath
 
-set FsIsValidPath=call "%FS%" :IsValidPath
-set FsIsDirectoryPath=call "%FS%" :IsDirectoryPath
-set FsIsFilePath=call "%FS%" :IsFilePath
+set FsIsValid=call "%~f0" :IsValidPath
+set FsIsDirectory=call "%~f0" :IsDirectory
+set FsIsFile=call "%~f0" :IsFile
+set FsIsProgram=call "%~f0" :IsProgram
 
-set FsIsValid=call "%FS%" :IsValidPath
-set FsIsDirectory=call "%FS%" :IsDirectory
-set FsIsFile=call "%FS%" :IsFile
-set FsIsProgram=call "%FS%" :IsProgram
+set FsMakeDirectory=call "%~f0" :MakeDirectory
+set FsProcessFile=call "%~f0" :ProcessFile
 
-set FsMakeDirectory=call "%FS%" :MakeDirectory
-set FsProcessFile=call "%FS%" :ProcessFile
-
-set FsDelete=call "%FS%" :Delete
-set FsCopy=call "%FS%" :Copy
+set FsDelete=call "%~f0" :Delete
+set FsCopy=call "%~f0" :Copy
 
 exit /B 0
 

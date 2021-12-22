@@ -7,7 +7,7 @@ Batch Linker and utility libraries.
 ### Initialization
 
 ```bat
-call "lib\linker.bat" :Init
+call "lib\linker.bat"
 ```
 
 ### Load

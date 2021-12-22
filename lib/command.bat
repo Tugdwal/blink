@@ -8,38 +8,28 @@ rem ---------- ---------- ---------- Init ---------- ---------- ----------
 rem Usage: Init
 :Init
 
-if "%LNK%" == "" (
+if "%LnkLoad%" == "" (
     echo:[Error] Use linker.bat to load '%~nx0'
     exit /B 1
-)
-
-if "%CMD%" == "" (
-    set CMD=%~f0
-) else (
-    exit /B 0
 )
 
 %LnkLoad% "format" "log"
 if ERRORLEVEL 1 ( exit /B )
 
-rem Values
-
 set CmdFlagOn=true
 set CmdFlagOff=false
 
-rem Functions
+set CmdSetOptions=call "%~f0" :SetOptions
+set CmdSetPositionalArguments=call "%~f0" :SetPositionalArguments
+set CmdSetExtraArguments=call "%~f0" :SetExtraArguments
+set CmdSetHelpAction=call "%~f0" :SetHelpAction
 
-set CmdSetOptions=call "%CMD%" :SetOptions
-set CmdSetPositionalArguments=call "%CMD%" :SetPositionalArguments
-set CmdSetExtraArguments=call "%CMD%" :SetExtraArguments
-set CmdSetHelpAction=call "%CMD%" :SetHelpAction
+set CmdParseArgument=call "%~f0" :ParseArgument
+set CmdParseArguments=call "%~f0" :ParseArguments
 
-set CmdParseArgument=call "%CMD%" :ParseArgument
-set CmdParseArguments=call "%CMD%" :ParseArguments
+set CmdIsOptionEnabled=call "%~f0" :IsOptionEnabled
 
-set CmdIsOptionEnabled=call "%CMD%" :IsOptionEnabled
-
-set CmdPrintOptions=call "%CMD%" :PrintOptions
+set CmdPrintOptions=call "%~f0" :PrintOptions
 
 exit /B 0
 

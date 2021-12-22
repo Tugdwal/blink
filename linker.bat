@@ -1,6 +1,11 @@
 rem ---------- ---------- ---------- Entry point ---------- ---------- ----------
 
-call %*
+if "%*" == "" (
+    call :Init
+) else (
+    call %*
+)
+
 exit /B
 
 rem ---------- ---------- ---------- Init ---------- ---------- ----------
@@ -8,15 +13,7 @@ rem ---------- ---------- ---------- Init ---------- ---------- ----------
 rem Usage: Init
 :Init
 
-if "%LNK%" == "" (
-    set LNK=%~f0
-) else (
-    exit /B 0
-)
-
-rem Functions
-
-set LnkLoad=call "%LNK%" :Load
+set LnkLoad=call "%~f0" :Load
 
 exit /B 0
 
