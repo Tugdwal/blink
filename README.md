@@ -10,7 +10,22 @@ Batch Linker and utility libraries.
 call "lib\linker.bat"
 ```
 
+### Deprecated
+
+Mark a function as deprecated.
+
+```bat
+rem Deprecated
+:Function
+
+%LnkDeprecated% "Function"
+
+exit /B 0
+```
+
 ### Load
+
+*Deprecated*
 
 Load a library. If a library fails to load, it returns immediately and errorlevel is unchanged.
 
