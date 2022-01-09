@@ -13,10 +13,8 @@ if "%LnkLoad%" == "" (
     exit /B 1
 )
 
-%LnkLoad% "log"
+%LnkLoadSystemLibrary% "log"
 if ERRORLEVEL 1 ( exit /B )
-
-rem Functions
 
 set TimerStart=call "%~f0" :Start
 set TimerEnd=call "%~f0" :End

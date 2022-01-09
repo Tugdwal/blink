@@ -19,6 +19,28 @@ Load a library. If a library fails to load, it returns immediately and errorleve
 if ERRORLEVEL 1 ( exit /B )
 ```
 
+### LoadLibrary
+
+Load a user provided library. If a library fails to load, it returns immediately and errorlevel is unchanged.
+
+```bat
+%LnkLoadLibrary% "lib"
+if ERRORLEVEL 1 ( exit /B )
+```
+
+Library path is relative to the current directory.
+
+### LoadSystemLibrary
+
+Load a builtin library. If a library fails to load, it returns immediately and errorlevel is unchanged.
+
+```bat
+%LnkLoadSystemLibrary% "log"
+if ERRORLEVEL 1 ( exit /B )
+```
+
+Library path is relative to the linker `lib` directory.
+
 ## Format
 
 ### Loading

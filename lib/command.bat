@@ -13,7 +13,7 @@ if "%LnkLoad%" == "" (
     exit /B 1
 )
 
-%LnkLoad% "format" "log"
+%LnkLoadSystemLibrary% "format" "log"
 if ERRORLEVEL 1 ( exit /B )
 
 set CmdFlagOn=true

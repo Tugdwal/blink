@@ -13,7 +13,7 @@ if "%LnkLoad%" == "" (
     exit /B 1
 )
 
-%LnkLoad% "log"
+%LnkLoadSystemLibrary% "log"
 if ERRORLEVEL 1 ( exit /B )
 
 set FsModeKeep=keep
