@@ -1,53 +1,45 @@
-rem ---------- ---------- ---------- Entry point ---------- ---------- ----------
-
+rem Entry point
 call %*
 exit /B
-
-rem ---------- ---------- ---------- Init ---------- ---------- ----------
 
 rem Usage: Init
 :Init
 
-if "%LnkLoad%" == "" (
-    echo:[Error] Use linker.bat to load '%~nx0'
-    exit /B 1
-)
-
-%LnkLoadSystemLibrary% "log"
-if ERRORLEVEL 1 ( exit /B )
-
 set TimerStart=call "%~f0" :Start
 set TimerEnd=call "%~f0" :End
-set TimerDiff=call "%~f0" :Diff
+set TimerDuration=call "%~f0" :Duration
+
+set TimerSplit=call "%~f0" :Split
+
+set TimerPlus=call "%~f0" :Plus
+set TimerMinus=call "%~f0" :Minus
+
+set TimerEqual=call "%~f0" :Equal
+set TimerLess=call "%~f0" :Less
+set TimerGreater=call "%~f0" :Greater
 
 exit /B 0
 
-rem ---------- ---------- ---------- Public ---------- ---------- ----------
-
-rem Usage: Start
+rem Usage: Start <TIMER>
 :Start
-set TIMER_PRIVATE_START_TIME=%TIME%
+set %~1_START_TIME=%TIME%
 exit /B 0
 
-rem Usage: End
+rem Usage: End <TIMER>
 :End
-set TIMER_PRIVATE_END_TIME=%TIME%
+set %~1_END_TIME=%TIME%
 exit /B 0
 
-rem Usage: Diff
-:Diff
-@setlocal
-call :DiffTimer DIFF_TIME "%TIMER_PRIVATE_START_TIME%" "%TIMER_PRIVATE_END_TIME%"
-%LogInfo% "Execution time: %DIFF_TIME%"
+rem Usage: Duration <RESULT> <TIMER>
+:Duration
+call :Minus "%~1" "%%%~2_END_TIME%%" "%%%~2_START_TIME%%"
 exit /B 0
 
-rem ---------- ---------- ---------- Private ---------- ---------- ----------
-
-rem Usage: SplitTimer <HOURS> <MINUTES> <SECONDS> <MILLISECONDS> <timer>
-:SplitTimer
+rem Usage: Split <RESULT_HOURS> <RESULT_MINUTES> <RESULT_SECONDS> <RESULT_MILLIS> <timer>
+:Split
 
 for /f "tokens=1-4 delims=:.," %%A in ("%~5") do (
-    set %~1=%%A
+    set /A %~1=100%%A %% 100
     set /A %~2=100%%B %% 100
     set /A %~3=100%%C %% 100
     set /A %~4=100%%D %% 100
@@ -55,48 +47,226 @@ for /f "tokens=1-4 delims=:.," %%A in ("%~5") do (
 
 exit /B 0
 
-rem Usage: DiffTimer <DIFF> <start> <end>
-:DiffTimer
+rem Usage: Minus <RESULT> <lhs> <rhs>
+rem RESULT = lhs - rhs
+:Minus
 
-call :SplitTimer START_H START_M START_S START_MS "%~2"
-call :SplitTimer END_H END_M END_S END_MS "%~3"
+call :Split LHS_HOURS LHS_MINUTES LHS_SECONDS LHS_MILLIS "%~2"
+call :Split RHS_HOURS RHS_MINUTES RHS_SECONDS RHS_MILLIS "%~3"
 
-set /A DIFF_H=%END_H% - %START_H%
-set /A DIFF_M=%END_M% - %START_M%
-set /A DIFF_S=%END_S% - %START_S%
-set /A DIFF_MS=%END_MS% - %START_MS%
+set /A RESULT_HOURS=%LHS_HOURS% - %RHS_HOURS%
+set /A RESULT_MINUTES=%LHS_MINUTES% - %RHS_MINUTES%
+set /A RESULT_SECONDS=%LHS_SECONDS% - %RHS_SECONDS%
+set /A RESULT_MILLIS=%LHS_MILLIS% - %RHS_MILLIS%
 
-if %DIFF_MS% lss 0 (
-    set /A DIFF_S=%DIFF_S% - 1
-    set /A DIFF_MS=100 + %DIFF_MS%
+if %RESULT_MILLIS% lss 0 (
+    set /A RESULT_MILLIS=%RESULT_MILLIS% + 100
+    set /A RESULT_SECONDS=%RESULT_SECONDS% - 1
 )
 
-if %DIFF_S% lss 0 (
-    set /A DIFF_M=%DIFF_M% - 1
-    set /A DIFF_S=60 + %DIFF_S%
+if %RESULT_SECONDS% lss 0 (
+    set /A RESULT_SECONDS=%RESULT_SECONDS% + 60
+    set /A RESULT_MINUTES=%RESULT_MINUTES% - 1
 )
 
-if %DIFF_M% lss 0 (
-    set /A DIFF_H=%DIFF_H% - 1
-    set /A DIFF_M=60 + %DIFF_M%
+if %RESULT_MINUTES% lss 0 (
+    set /A RESULT_MINUTES=%RESULT_MINUTES% + 60
+    set /A RESULT_HOURS=%RESULT_HOURS% - 1
 )
 
-if %DIFF_H% lss 0 (
-    set /A DIFF_H=24 + %DIFF_H%
+if %RESULT_HOURS% lss 0 (
+    set /A RESULT_HOURS=%RESULT_HOURS% + 24
 )
 
-set DIFF_H=0%DIFF_H%
-set DIFF_H=%DIFF_H:~-2%
+set RESULT_HOURS=0%RESULT_HOURS%
+set RESULT_HOURS=%RESULT_HOURS:~-2%
 
-set DIFF_M=0%DIFF_M%
-set DIFF_M=%DIFF_M:~-2%
+set RESULT_MINUTES=0%RESULT_MINUTES%
+set RESULT_MINUTES=%RESULT_MINUTES:~-2%
 
-set DIFF_S=0%DIFF_S%
-set DIFF_S=%DIFF_S:~-2%
+set RESULT_SECONDS=0%RESULT_SECONDS%
+set RESULT_SECONDS=%RESULT_SECONDS:~-2%
 
-set DIFF_MS=0%DIFF_MS%
-set DIFF_MS=%DIFF_MS:~-2%
+set RESULT_MILLIS=0%RESULT_MILLIS%
+set RESULT_MILLIS=%RESULT_MILLIS:~-2%
 
-set %~1=%DIFF_H%:%DIFF_M%:%DIFF_S%.%DIFF_MS%
+echo %RESULT_HOURS%
+echo %RESULT_MINUTES%
+echo %RESULT_SECONDS%
+echo %RESULT_MILLIS%
+
+set %~1=%RESULT_HOURS%:%RESULT_MINUTES%:%RESULT_SECONDS%.%RESULT_MILLIS%
+
+exit /B 0
+
+rem Usage: Plus <RESULT> <lhs> <rhs>
+rem RESULT = lhs == rhs
+:Equal
+
+call :Split LHS_HOURS LHS_MINUTES LHS_SECONDS LHS_MILLIS "%~2"
+call :Split RHS_HOURS RHS_MINUTES RHS_SECONDS RHS_MILLIS "%~3"
+
+set %~1=true
+
+if %LHS_HOURS% neq %RHS_HOURS% (
+    set %~1=false
+    exit /B 0
+)
+
+if %LHS_MINUTES% neq %RHS_MINUTES% (
+    set %~1=false
+    exit /B 0
+)
+
+if %LHS_SECONDS% neq %RHS_SECONDS% (
+    set %~1=false
+    exit /B 0
+)
+
+if %LHS_MILLIS% neq %RHS_MILLIS% (
+    set %~1=false
+    exit /B 0
+)
+
+exit /B 0
+
+rem Usage: Less <RESULT> <lhs> <rhs>
+rem RESULT = lhs < rhs
+:Less
+
+call :Split LHS_HOURS LHS_MINUTES LHS_SECONDS LHS_MILLIS "%~2"
+call :Split RHS_HOURS RHS_MINUTES RHS_SECONDS RHS_MILLIS "%~3"
+
+set %~1=false
+
+if %LHS_HOURS% lss %RHS_HOURS% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_HOURS% lss %LHS_HOURS% (
+    exit /B 0
+)
+
+if %LHS_MINUTES% lss %RHS_MINUTES% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_MINUTES% lss %LHS_MINUTES% (
+    exit /B 0
+)
+
+if %LHS_SECONDS% lss %RHS_SECONDS% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_SECONDS% lss %LHS_SECONDS% (
+    exit /B 0
+)
+
+if %LHS_MILLIS% lss %RHS_MILLIS% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_MILLIS% lss %LHS_MILLIS% (
+    exit /B 0
+)
+
+exit /B 0
+
+rem Usage: Greater <RESULT> <lhs> <rhs>
+rem RESULT = lhs > rhs
+:Greater
+
+call :Split LHS_HOURS LHS_MINUTES LHS_SECONDS LHS_MILLIS "%~2"
+call :Split RHS_HOURS RHS_MINUTES RHS_SECONDS RHS_MILLIS "%~3"
+
+set %~1=false
+
+if %LHS_HOURS% gtr %RHS_HOURS% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_HOURS% gtr %LHS_HOURS% (
+    exit /B 0
+)
+
+if %LHS_MINUTES% gtr %RHS_MINUTES% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_MINUTES% gtr %LHS_MINUTES% (
+    exit /B 0
+)
+
+if %LHS_SECONDS% gtr %RHS_SECONDS% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_SECONDS% gtr %LHS_SECONDS% (
+    exit /B 0
+)
+
+if %LHS_MILLIS% gtr %RHS_MILLIS% (
+    set %~1=true
+    exit /B 0
+)
+
+if %RHS_MILLIS% gtr %LHS_MILLIS% (
+    exit /B 0
+)
+
+exit /B 0
+
+rem Usage: Plus <RESULT> <lhs> <rhs>
+rem RESULT = lhs + rhs
+:Plus
+
+call :Split LHS_HOURS LHS_MINUTES LHS_SECONDS LHS_MILLIS "%~2"
+call :Split RHS_HOURS RHS_MINUTES RHS_SECONDS RHS_MILLIS "%~3"
+
+set /A RESULT_HOURS=%LHS_HOURS% + %RHS_HOURS%
+set /A RESULT_MINUTES=%LHS_MINUTES% + %RHS_MINUTES%
+set /A RESULT_SECONDS=%LHS_SECONDS% + %RHS_SECONDS%
+set /A RESULT_MILLIS=%LHS_MILLIS% + %RHS_MILLIS%
+
+if %RESULT_MILLIS% geq 100 (
+    set /A RESULT_MILLIS=%RESULT_MILLIS% - 100
+    set /A RESULT_SECONDS=%RESULT_SECONDS% + 1
+)
+
+if %RESULT_SECONDS% geq 60 (
+    set /A RESULT_SECONDS=%RESULT_SECONDS% - 60
+    set /A RESULT_MINUTES=%RESULT_MINUTES% + 1
+)
+
+if %RESULT_MINUTES% geq 60 (
+    set /A RESULT_MINUTES=%RESULT_MINUTES% - 60
+    set /A RESULT_HOURS=%RESULT_HOURS% + 1
+)
+
+if %RESULT_HOURS% geq 24 (
+    set /A RESULT_HOURS=%RESULT_HOURS% - 24
+)
+
+set RESULT_HOURS=0%RESULT_HOURS%
+set RESULT_HOURS=%RESULT_HOURS:~-2%
+
+set RESULT_MINUTES=0%RESULT_MINUTES%
+set RESULT_MINUTES=%RESULT_MINUTES:~-2%
+
+set RESULT_SECONDS=0%RESULT_SECONDS%
+set RESULT_SECONDS=%RESULT_SECONDS:~-2%
+
+set RESULT_MILLIS=0%RESULT_MILLIS%
+set RESULT_MILLIS=%RESULT_MILLIS:~-2%
+
+set %~1=%RESULT_HOURS%:%RESULT_MINUTES%:%RESULT_SECONDS%.%RESULT_MILLIS%
 
 exit /B 0

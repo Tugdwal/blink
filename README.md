@@ -102,26 +102,91 @@ May be used instead of the builtin `echo` command inside blocks to avoid syntax 
 
 ### Start
 
-Start or restart the timer.
+Start or restart a timer.
 
 ```bat
-%TimerStart%
+%TimerStart% TIMER
 ```
 
 ### End
 
-Stop the timer.
+Stop a timer.
 
 ```bat
-%TimerEnd%
+%TimerEnd% TIMER
 ```
 
-### Diff
+### Duration
 
-Show the elapsed time.
+Get the duration a timer.
 
 ```bat
-%TimerDiff%
+%TimerDuration% RESULT TIMER
+
+echo %RESULT%
+```
+
+### Split
+
+Return each component of a timer separately.
+
+```bat
+%TimerSplit% RESULT_HOURS RESULT_MINUTES RESULT_SECONDS RESULT_MILLIS "%TIMER%"
+
+echo %RESULT_HOURS%
+echo %RESULT_MINUTES%
+echo %RESULT_SECONDS%
+echo %RESULT_MILLIS%
+```
+
+### Plus (+)
+
+Add 2 timers.
+
+```bat
+%TimerPlus% RESULT "%LHS_TIMER%" "%RHS_TIMER%"
+
+echo %RESULT%
+```
+
+### Minus (-)
+
+Subtract 2 timers.
+
+```bat
+%TimerMinus% RESULT "%LHS_TIMER%" "%RHS_TIMER%"
+
+echo %RESULT%
+```
+
+### Equal (==)
+
+Compare 2 timers. Returns `true` or `false`.
+
+```bat
+%TimerEqual% RESULT "%LHS_TIMER%" "%RHS_TIMER%"
+
+echo %RESULT%
+```
+
+### Less (<)
+
+Compare 2 timers. Returns `true` or `false`.
+
+```bat
+%TimerDuration% RESULT TIMER
+
+echo %RESULT%
+```
+
+### Greater (>)
+
+Compare 2 timers. Returns `true` or `false`.
+
+```bat
+%TimerDuration% RESULT TIMER
+
+echo %RESULT%
 ```
 
 ## Filesystem
