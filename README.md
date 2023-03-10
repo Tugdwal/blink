@@ -72,9 +72,13 @@ call %Function% "first" "second"
 
 > second first
 
+## Expression
+
+Expression are variables containing a partial or complete instruction. Expression can be almost anything excluding some control characters. Function references are a special kind of expression.
+
 ## Module
 
-A module is a script that exports a set of symbols, namely function references.
+A module is a script that exports a set of symbols, namely constants, expressions and function references.
 
 ### Loading
 
@@ -131,6 +135,7 @@ if errorlevel 1 ( exit /B )
 
 ### Standard modules
 
+* [Bool](doc/lib/bool.md)
 * [Linker](doc/linker.md)
 * [Log](doc/lib/log.md)
 * [Timer](doc/lib/timer.md)
