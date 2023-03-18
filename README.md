@@ -136,6 +136,7 @@ if errorlevel 1 ( exit /B )
 ### Standard modules
 
 * [Bool](doc/lib/bool.md)
+* [Filesystem](doc/lib/filesystem.md)
 * [Linker](doc/linker.md)
 * [Log](doc/lib/log.md)
 * [Timer](doc/lib/timer.md)
